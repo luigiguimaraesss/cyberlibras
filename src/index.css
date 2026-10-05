@@ -1,0 +1,174 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    color-scheme: dark;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply min-h-screen bg-night font-sans text-ink antialiased;
+    background-image:
+      radial-gradient(60rem 30rem at 85% -10%, rgba(37, 99, 235, 0.28), transparent),
+      radial-gradient(40rem 25rem at -10% 25%, rgba(96, 165, 250, 0.1), transparent);
+    background-repeat: no-repeat;
+  }
+
+  /* Foco sempre visível para quem navega por teclado (WCAG 2.4.7 / 2.4.11). */
+  :focus-visible {
+    outline: 3px solid #60a5fa;
+    outline-offset: 3px;
+  }
+
+  /* Elementos focados por código (títulos, feedback) não precisam de contorno. */
+  [tabindex='-1']:focus {
+    outline: none;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex min-h-[48px] items-center justify-center gap-2 rounded-xl px-5 py-3 text-base font-semibold transition duration-200 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60;
+  }
+  .btn-primary {
+    @apply btn bg-brand text-white shadow-glow hover:bg-blue-700 disabled:shadow-none;
+  }
+  .btn-secondary {
+    @apply btn border border-slate-500/70 bg-surface-raised text-ink hover:bg-slate-700/70;
+  }
+  .btn-danger {
+    @apply btn bg-red-700 text-white hover:bg-red-800;
+  }
+  .card {
+    @apply rounded-3xl border border-white/10 bg-surface/90 shadow-soft;
+  }
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-surface-raised px-3 py-1 text-sm font-medium text-ink-soft;
+  }
+}
+
+/* ---------- Animações ---------- */
+@keyframes screen-enter {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes pop {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes feedback-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes ring-pulse {
+  0% {
+    transform: scale(0.85);
+    opacity: 0.55;
+  }
+  100% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}
+@keyframes unlock-pop {
+  0% {
+    transform: scale(0.6) rotate(-12deg);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.15) rotate(4deg);
+    opacity: 1;
+  }
+  100% {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+.animate-screen {
+  animation: screen-enter 0.35s ease-out both;
+}
+.animate-pop {
+  animation: pop 0.25s ease-out;
+}
+.animate-feedback {
+  animation: feedback-in 0.3s ease-out both;
+}
+.animate-draw {
+  stroke-dasharray: 60;
+  stroke-dashoffset: 60;
+  animation: draw 0.7s 0.2s ease-out forwards;
+}
+.animate-ring {
+  animation: ring-pulse 2.2s ease-out infinite;
+}
+.animate-unlock {
+  animation: unlock-pop 0.6s ease-out both;
+}
+
+/* ---------- Janela modal (elemento <dialog>) ---------- */
+dialog.modal {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  width: calc(100% - 1.5rem);
+  max-width: 40rem;
+  max-height: calc(100dvh - 1.5rem);
+  overflow: visible;
+}
+dialog.modal.modal-lg {
+  max-width: 52rem;
+}
+dialog.modal::backdrop {
+  background: rgba(8, 13, 24, 0.78);
+  backdrop-filter: blur(4px);
+}
+dialog.modal[open] {
+  animation: screen-enter 0.25s ease-out both;
+}
+
+/* ---------- Preferência por movimento reduzido ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .animate-ring {
+    display: none;
+  }
+  .animate-draw {
+    stroke-dashoffset: 0;
+  }
+}
